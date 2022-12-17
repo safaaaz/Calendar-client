@@ -1,3 +1,5 @@
+import { initCalendar } from "./calendar";
+
 const initRouter = () => {
   // create document click that watches the nav links only
   document.addEventListener("click", (event) => {
@@ -54,7 +56,7 @@ const urlRoutes = {
     title: "Calendar | " + urlPageTitle,
     description: "This is the calendar page",
     init: () => {
-      // initCalendar();
+      initCalendar();
     },
   },
 };

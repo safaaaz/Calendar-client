@@ -1,3 +1,5 @@
+import { initRegister } from "./register";
+import { initLogin } from "./login";
 import { initCalendar } from "./calendar";
 
 const initRouter = () => {
@@ -40,7 +42,7 @@ const urlRoutes = {
     title: "Register | " + urlPageTitle,
     description: "This is the register page",
     init: () => {
-      // initRegister();
+      initRegister();
     },
   },
   "/login": {
@@ -48,7 +50,7 @@ const urlRoutes = {
     title: "Login | " + urlPageTitle,
     description: "This is the login page",
     init: () => {
-      // initLogin();
+      initLogin();
     },
   },
   "/calendar": {

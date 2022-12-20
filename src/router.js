@@ -1,6 +1,7 @@
 import { initRegister } from "./register";
 import { initLogin } from "./login";
 import { initCalendar, initCreateEvent } from "./calendar";
+import { initSettings} from "./settings"
 
 const initRouter = () => {
   // create document click that watches the nav links only
@@ -60,6 +61,23 @@ const urlRoutes = {
     init: () => {
       initCalendar();
       initCreateEvent();
+      initCreateEvent();
+    },
+  },
+  "/settings": {
+    template: "templates/settings.html",
+    title: "Settings | " + urlPageTitle,
+    description: "This is the settings page",
+    init: () => {
+      initSettings();
+    },
+  },
+  "/settings": {
+    template: "templates/settings.html",
+    title: "Settings | " + urlPageTitle,
+    description: "This is the settings page",
+    init: () => {
+      initSettings();
     },
   },
 };

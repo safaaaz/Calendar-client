@@ -1,4 +1,5 @@
 import $ from "jquery";
+import { createCalendarEvent } from "./create_event_rest";
 
 const initCalendar = () => {
   //Set today as default day on event form

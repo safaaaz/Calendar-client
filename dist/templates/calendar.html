@@ -1,39 +1,130 @@
 This is calendar
 <div class="col-1">
-    <!-- Button trigger modal -->
-    <button id="modal-button" class="btn btn-primary"> <b>+</b> create event</button>
-    <!-- The Modal -->
-    <div id="test-modal" class="modal" tabindex="-1" role="dialog">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Modal title</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
-          </div>
-          <div class="modal-body">
-            <p>Modal body text goes here.</p>
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-primary">Save changes</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-          </div>
+  <!-- Button trigger modal -->
+  <button id="modal-button" class="btn btn-primary">
+    <b>+</b> create event
+  </button>
+  <!-- The Modal -->
+  <div id="test-modal" class="modal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Create a new event</h5>
+          <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+          >
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <form>
+            <div class="form-row">
+              <div class="col-md-6 mb-3">
+                <label>Title </label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="title"
+                  placeholder="Title"
+                  value="Event title"
+                  required
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label>Date</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="date"
+                  placeholder="Date"
+                  value="20-12-2022"
+                  required
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label>Time</label>
+                <input
+                  type="time"
+                  class="form-control"
+                  id="time"
+                  placeholder="Time"
+                  value="14:00"
+                  required
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label>Duration</label>
+                <input
+                  type="number"
+                  class="form-control"
+                  id="duration"
+                  placeholder="Duration"
+                  value="2"
+                  required
+                />
+                (hours)
+              </div>
+              <div class="col-md-6 mb-3">
+                <label>Location</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="location"
+                  placeholder="Location"
+                  value="Google"
+                  required
+                />
+              </div>
+              <div class="col-md-6 mb-3">
+                <label>Description </label>
+                <input
+                  type="textarea"
+                  class="form-control"
+                  id="description"
+                  placeholder="Description"
+                  value="Your event details here"
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  value=""
+                  id="private"
+                />
+                <label class="form-check-label"> This event is private </label>
+              </div>
+            </div>
+            <button class="btn btn-primary" type="submit">Create</button>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary">Save changes</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">
+            Close
+          </button>
         </div>
       </div>
     </div>
+  </div>
 </div>
 <div class="col-10">
-    <table>
-        <tr>
-            <th>Sunday</th>
-            <th>Monday</th>
-            <th>Tuesday</th>
-            <th>wednesday</th>
-            <th>Thursday</th>
-            <th>Friday</th>
-            <th>Saturday</th>
-        </tr>
-    </table>
+  <table>
+    <tr>
+      <th>Sunday</th>
+      <th>Monday</th>
+      <th>Tuesday</th>
+      <th>wednesday</th>
+      <th>Thursday</th>
+      <th>Friday</th>
+      <th>Saturday</th>
+    </tr>
+  </table>
 </div>
 <div class="col-1"></div>

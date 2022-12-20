@@ -1,6 +1,10 @@
 import $ from "jquery";
 
 const initCalendar = () => {
+  //Set today as default day on event form
+  var today = new Date();
+  $("#date").attr("value", today.toISOString().substring(0, 10));
+
   // Get the modal
   let modal = $("#test-modal");
 
@@ -10,7 +14,7 @@ const initCalendar = () => {
   // When the user clicks the button, open the modal
   button.on("click", () => {
     modal.css("display", "block");
-  })
+  });
 
   for (let i = 0; i < 5; i++) {
     $("table").append(
@@ -64,4 +68,21 @@ const getDaysInMonthUTC = (month, year) => {
   return days;
 };
 
-export { initCalendar };
+const initCreateEvent = () => {
+  $("#createEventBtn").on("click", function (event) {
+    event.preventDefault();
+    const calendarEvent = {
+      title: $("#title").val(),
+      date: $("#date").val(),
+      time: $("#time").val(),
+      duration: $("#duration").val(),
+      location: $("#location").val(),
+      description: $("#description").val(),
+      isPrivate: $("#isPrivate").is(":checked") ? true : false,
+    };
+    console.log(calendarEvent);
+    createCalendarEvent(calendarEvent);
+  });
+};
+
+export { initCalendar, initCreateEvent };

@@ -22,8 +22,9 @@ const initLogin = (key) => {
         .then((response) => {
           return response.status == 200 ? response.json() : null;
         })
-        .then(async (data) => {
-          if (data != null) {
+        .then(async (token) => {
+          if (token != null) {
+            localStorage.setItem("token", token);
             window.history.pushState({}, "", "/calendar");
             await urlLocationHandler();
           }

@@ -1,6 +1,6 @@
 import { initRegister } from "./register";
 import { initLogin } from "./login";
-import { initCalendar } from "./calendar";
+import { initCalendar, initCreateEvent } from "./calendar";
 
 const initRouter = () => {
   // create document click that watches the nav links only
@@ -59,6 +59,7 @@ const urlRoutes = {
     description: "This is the calendar page",
     init: () => {
       initCalendar();
+      initCreateEvent();
     },
   },
 };

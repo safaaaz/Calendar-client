@@ -1,0 +1,41 @@
+import { serverAddress } from "./constants";
+
+const createCalendarEvent = (calendarEvent) => {
+  console.log("Calling localhost:8080/event/add");
+
+  const combinedDateTime = combineDateTime(
+    calendarEvent.dateTime,
+    calendarEvent.time
+  );
+
+  fetch(serverAddress + "/event/add", {
+    method: "POST",
+    body: JSON.stringify({
+      title: calendarEvent.title,
+      dateTime: calendarEvent.date + "T" + calendarEvent.time,
+      duration: calendarEvent.duration,
+      description: calendarEvent.description,
+      isPrivate: calendarEvent.isPrivate,
+      location: calendarEvent.location,
+    }),
+    headers: {
+      "Content-Type": "application/json",
+      token: localStorage.getItem("token"),
+    },
+  })
+    .then((response) => {
+        if (response.status == 200) {
+        }
+      return response.json();
+    })
+    .then((response) => {
+      if (response.success) {
+        redirect("/calendar");
+      } else {
+        alert(response.message);
+      }
+    })
+    .catch((error) => {
+      console.error(`ERROR: ${error}`);
+    });
+};

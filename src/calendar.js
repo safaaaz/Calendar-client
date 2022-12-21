@@ -12,14 +12,7 @@ fetch(serverAddress + "/event/getEventsByMonth/12", {
   .then((response) => {
     if (response.ok) {
       response.text().then((text)=>{
-      events = JSON.parse(text);
-      events.forEach(element => {
-        
-            console.log(element);
-            console.log(element.title);
-          
-      });
-      });
+      events = JSON.parse(text);});
     } else {
       alert(response.message);
     }

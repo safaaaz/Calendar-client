@@ -14,7 +14,11 @@ const initCalendar = () => {
 
   // When the user clicks the button, open the modal
   button.on("click", () => {
-    modal.css("display", "block");
+    modal.show();
+  });
+
+  $(".closeModalBtn").on("click", () => {
+    modal.hide();
   });
 
   for (let i = 0; i < 5; i++) {

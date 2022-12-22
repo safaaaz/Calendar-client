@@ -14,16 +14,15 @@ const initCalendar = () => {
       "Content-Type": "application/json",
       token: localStorage.getItem("token"),
     },
-  })
-    .then((response) => {
-      if (response.ok) {
-        response.text().then((text)=>{
-        events = JSON.parse(text);});
-      } else {
-        alert(response.message);
-      }
+  }).then((response) => {
+    if (response.ok) {
+      response.text().then((text) => {
+        events = JSON.parse(text);
+      });
+    } else {
+      alert(response.message);
     }
-     );
+  });
   $("#date").attr("value", today.toISOString().substring(0, 10));
 
   // Get the modal
@@ -55,7 +54,7 @@ const initCalendar = () => {
     );
   }
 
-  let days = getDaysInMonthUTC(10, 2022);
+  let days = getDaysInMonthUTC(11, 2022);
 
   let offset = days[0].getDay();
 
@@ -75,16 +74,19 @@ const initCalendar = () => {
 };
 
 const cardElement = (day) => {
-  var htmlString=`<div class="card" style="width: 12rem; height: 18rem;">
+  var htmlString = `<div class="card" style="width: 12rem; height: 18rem;">
   <div class="card-body">
       <h5 class="card-title">${day.getUTCDate()}</h5>
       <p class="card-text">`;
-  events.forEach(element => {
-    var date = new Date(element.dateTime).getDate();
-    if(date==day.getUTCDate()){
-      htmlString+=`<button id="event${element.id}">${element.title}</button><br>`;}
-  });
-  htmlString+=`</p></div></div>`;
+  if (events != undefined) {
+    events.forEach((element) => {
+      var date = new Date(element.dateTime).getDate();
+      if (date == day.getUTCDate()) {
+        htmlString += `<button id="event${element.id}">${element.title}</button><br>`;
+      }
+    });
+  }
+  htmlString += `</p></div></div>`;
   return htmlString;
 };
 

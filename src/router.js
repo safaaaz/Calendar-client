@@ -61,15 +61,6 @@ const urlRoutes = {
     init: () => {
       initCalendar();
       initCreateEvent();
-      initCreateEvent();
-    },
-  },
-  "/settings": {
-    template: "templates/settings.html",
-    title: "Settings | " + urlPageTitle,
-    description: "This is the settings page",
-    init: () => {
-      initSettings();
     },
   },
   "/settings": {

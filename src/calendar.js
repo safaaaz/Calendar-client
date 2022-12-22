@@ -1,7 +1,10 @@
 import $ from "jquery";
 import { createCalendarEvent } from "./create_event_rest";
 import { serverAddress } from "./constants";
-var events;
+import { urlLocationHandler } from "./router";
+import { DateSingleton } from "./date";
+
+let events;
 
 const initCalendar = () => {
   //Set today as default day on event form
@@ -54,7 +57,29 @@ const initCalendar = () => {
     );
   }
 
-  let days = getDaysInMonthUTC(11, 2022);
+  $("#month").text(DateSingleton.getInstance().getMonth() + 1);
+  $("#year").text(DateSingleton.getInstance().getYear());
+
+  $("#left-button").on("click", async () => {
+    DateSingleton.getInstance().setMonth(
+      DateSingleton.getInstance().getMonth() - 1
+    );
+    window.history.pushState({}, "", "/calendar");
+    await urlLocationHandler();
+  });
+
+  $("#right-button").on("click", async () => {
+    DateSingleton.getInstance().setMonth(
+      DateSingleton.getInstance().getMonth() + 1
+    );
+    window.history.pushState({}, "", "/calendar");
+    await urlLocationHandler();
+  });
+
+  let days = getDaysInMonthUTC(
+    DateSingleton.getInstance().getMonth(),
+    DateSingleton.getInstance().getYear()
+  );
 
   let offset = days[0].getDay();
 
@@ -80,8 +105,8 @@ const cardElement = (day) => {
       <p class="card-text">`;
   if (events != undefined) {
     events.forEach((element) => {
-      var date = new Date(element.dateTime).getDate();
-      if (date == day.getUTCDate()) {
+      var date = new Date(element.dateTime)
+      if (date.getDate() == day.getUTCDate()) { //  && date.getMonth() == day.getUTCMonth() && date.getYear() == day.getYear()
         htmlString += `<button id="event${element.id}">${element.title}</button><br>`;
       }
     });

@@ -10,13 +10,9 @@ This is calendar
       <div class="modal-content">
         <div class="modal-header">
           <h5 class="modal-title">Create a new event</h5>
-          <button
-            type="button"
-            class="close closeModalBtn"
-            data-dismiss="modal"
-            aria-label="Close
+          <button type="button" class="close closeModalBtn" data-dismiss="modal" aria-label="Close
           >
-            <span aria-hidden="true">&times;</span>
+            <span aria-hidden=" true">&times;</span>
           </button>
         </div>
         <div class="modal-body">
@@ -24,69 +20,29 @@ This is calendar
             <div class="form-row">
               <div class="col-md-6 mb-3">
                 <label>Title </label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="title"
-                  placeholder="Title"
-                  value="Event title"
-                  required
-                />
+                <input type="text" class="form-control" id="title" placeholder="Title" value="Event title" required />
               </div>
               <div class="col-md-6 mb-3">
                 <label>Date</label>
-                <input
-                  type="date"
-                  class="form-control"
-                  id="date"
-                  value="2022-12-26"
-                  placeholder="Date"
-                  required
-                />
+                <input type="date" class="form-control" id="date" value="2022-12-26" placeholder="Date" required />
               </div>
               <div class="col-md-6 mb-3">
                 <label>Time</label>
-                <input
-                  type="time"
-                  class="form-control"
-                  id="time"
-                  placeholder="Time"
-                  value="14:00"
-                  required
-                />
+                <input type="time" class="form-control" id="time" placeholder="Time" value="14:00" required />
               </div>
               <div class="col-md-6 mb-3">
                 <label>Duration</label>
-                <input
-                  type="number"
-                  class="form-control"
-                  id="duration"
-                  placeholder="Duration"
-                  value="2"
-                  required
-                />
+                <input type="number" class="form-control" id="duration" placeholder="Duration" value="2" required />
                 (hours)
               </div>
               <div class="col-md-6 mb-3">
                 <label>Location</label>
-                <input
-                  type="text"
-                  class="form-control"
-                  id="location"
-                  placeholder="Location"
-                  value="Google"
-                  required
-                />
+                <input type="text" class="form-control" id="location" placeholder="Location" value="Google" required />
               </div>
               <div class="col-md-6 mb-3">
                 <label>Description </label>
-                <input
-                  type="textarea"
-                  class="form-control"
-                  id="description"
-                  placeholder="Description"
-                  value="Your event details here"
-                />
+                <input type="textarea" class="form-control" id="description" placeholder="Description"
+                  value="Your event details here" />
               </div>
             </div>
 
@@ -102,11 +58,7 @@ This is calendar
           <button type="button" id="createEventBtn" class="btn btn-primary">
             Create
           </button>
-          <button
-            type="button"
-            class="btn btn-secondary closeModalBtn"
-            data-dismiss="modal"
-          >
+          <button type="button" class="btn btn-secondary closeModalBtn" data-dismiss="modal">
             Close
           </button>
         </div>
@@ -115,6 +67,12 @@ This is calendar
   </div>
 </div>
 <div class="col-10">
+  <div>
+    <button id="left-button" type="button" class="btn btn-light">
+      < </button>
+        <span id="month">Month</span>, <span id="year">Year</span>
+        <button id="right-button" type="button" class="btn btn-light">></button>
+  </div>
   <table>
     <tr>
       <th>Sunday</th>

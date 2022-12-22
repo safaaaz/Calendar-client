@@ -1,8 +1,30 @@
 import $ from "jquery";
+import { createCalendarEvent } from "./create_event_rest";
+import { serverAddress } from "./constants";
 
+var events;
+fetch(serverAddress + "/event/getEventsByMonth/12", {
+  method: "GET",
+  headers: {
+    "Content-Type": "application/json",
+    token: localStorage.getItem("token"),
+  },
+})
+  .then((response) => {
+    if (response.ok) {
+      response.text().then((text)=>{
+      events = JSON.parse(text);});
+    } else {
+      alert(response.message);
+    }
+  }
+   );
 const initCalendar = () => {
   //Set today as default day on event form
   var today = new Date();
+  var month = 12;
+    
+
   $("#date").attr("value", today.toISOString().substring(0, 10));
 
   // Get the modal
@@ -13,7 +35,11 @@ const initCalendar = () => {
 
   // When the user clicks the button, open the modal
   button.on("click", () => {
-    modal.css("display", "block");
+    modal.show();
+  });
+
+  $(".closeModalBtn").on("click", () => {
+    modal.hide();
   });
 
   for (let i = 0; i < 5; i++) {
@@ -50,12 +76,17 @@ const initCalendar = () => {
 };
 
 const cardElement = (day) => {
-  return `<div class="card" style="width: 12rem; height: 18rem;">
-                <div class="card-body">
-                    <h5 class="card-title">${day.getUTCDate()}</h5>
-                    <p class="card-text"></p>
-                </div>
-            </div>`;
+  var htmlString=`<div class="card" style="width: 12rem; height: 18rem;">
+  <div class="card-body">
+      <h5 class="card-title">${day.getUTCDate()}</h5>
+      <p class="card-text">`;
+  events.forEach(element => {
+    var date = new Date(element.dateTime).getDate();
+    if(date==day.getUTCDate()){
+      htmlString+=`<button id="event${element.id}">${element.title}</button><br>`;}
+  });
+  htmlString+=`</p></div></div>`;
+  return htmlString;
 };
 
 const getDaysInMonthUTC = (month, year) => {

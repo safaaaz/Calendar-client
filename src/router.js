@@ -1,4 +1,7 @@
-import { initCalendar } from "./calendar";
+import { initRegister } from "./register";
+import { initLogin } from "./login";
+import { initCalendar, initCreateEvent } from "./calendar";
+import { initSettings} from "./settings"
 
 const initRouter = () => {
   // create document click that watches the nav links only
@@ -40,7 +43,7 @@ const urlRoutes = {
     title: "Register | " + urlPageTitle,
     description: "This is the register page",
     init: () => {
-      // initRegister();
+      initRegister();
     },
   },
   "/login": {
@@ -48,7 +51,7 @@ const urlRoutes = {
     title: "Login | " + urlPageTitle,
     description: "This is the login page",
     init: () => {
-      // initLogin();
+      initLogin();
     },
   },
   "/calendar": {
@@ -57,6 +60,15 @@ const urlRoutes = {
     description: "This is the calendar page",
     init: () => {
       initCalendar();
+      initCreateEvent();
+    },
+  },
+  "/settings": {
+    template: "templates/settings.html",
+    title: "Settings | " + urlPageTitle,
+    description: "This is the settings page",
+    init: () => {
+      initSettings();
     },
   },
 };

@@ -1,30 +1,29 @@
 import $ from "jquery";
 import { createCalendarEvent } from "./create_event_rest";
 import { serverAddress } from "./constants";
-
 var events;
-fetch(serverAddress + "/event/getEventsByMonth/12", {
-  method: "GET",
-  headers: {
-    "Content-Type": "application/json",
-    token: localStorage.getItem("token"),
-  },
-})
-  .then((response) => {
-    if (response.ok) {
-      response.text().then((text)=>{
-      events = JSON.parse(text);});
-    } else {
-      alert(response.message);
-    }
-  }
-   );
+
 const initCalendar = () => {
   //Set today as default day on event form
   var today = new Date();
   var month = 12;
-    
 
+  fetch(serverAddress + "/event/getEventsByMonth/12", {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+      token: localStorage.getItem("token"),
+    },
+  })
+    .then((response) => {
+      if (response.ok) {
+        response.text().then((text)=>{
+        events = JSON.parse(text);});
+      } else {
+        alert(response.message);
+      }
+    }
+     );
   $("#date").attr("value", today.toISOString().substring(0, 10));
 
   // Get the modal

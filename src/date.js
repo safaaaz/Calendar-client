@@ -19,9 +19,8 @@ const DateSingleton = (function () {
       } else if (m == 12) {
         month = 0;
         setYear(getYear() + 1);
-      }
-      else{
-        month = m
+      } else {
+        month = m;
       }
     }
 

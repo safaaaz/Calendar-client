@@ -9,6 +9,7 @@ let events;
 
 const initCalendar = async () => {
   let id;
+  let attachments = [];
 
   //Set today as default day on event form
   var today = new Date();
@@ -40,6 +41,28 @@ const initCalendar = async () => {
   // When the user clicks the button, open the modal
   button.on("click", () => {
     modal.show();
+  });
+
+  // add attachments dynamically
+  $("#add-button").on("click", () => {
+    $("#attachments").empty();
+    attachments.push($("#attachment").val());
+
+    attachments.forEach((attachment, index) => {
+      if (attachment != "") {
+        $("#attachments").append(
+          `<li id="attachment-${index}" class="list-group-item"> ${attachment} <button id="delete-attachment-${index}" type="button" class="btn btn-danger">Delete</button></li>`
+        );
+      }
+    });
+
+    // we add listener for every delete button, so we could remove attachment if we added something we regret about
+    attachments.forEach((_, index) => {
+      $(`#delete-attachment-${index}`).on("click", () => {
+        attachments[index] = "";
+        $(`#attachment-${index}`).remove();
+      });
+    });
   });
 
   $(".closeModalBtn").on("click", () => {
@@ -86,14 +109,6 @@ const initCalendar = async () => {
 
   let offset = days[0].getDay();
 
-  console.log(offset);
-
-  const emptyCardElement = () => {
-    return `<div class="card" style="width: 12rem; height: 18rem;">
-              <div class="card-body"></div>
-            </div>`;
-  };
-
   for (let i = 0; i < offset; i++) {
     $(`#${i}`).append(emptyCardElement());
   }
@@ -122,6 +137,12 @@ const initCalendar = async () => {
   }
 };
 
+const emptyCardElement = () => {
+  return `<div class="card" style="width: 12rem; height: 18rem;">
+            <div class="card-body"></div>
+          </div>`;
+};
+
 const cardElement = (day) => {
   let htmlString = `<div class="card" style="width: 12rem; height: 18rem;">
     <div class="card-body">
@@ -142,6 +163,8 @@ const cardElement = (day) => {
 
   return htmlString;
 };
+
+const attachmentElement = () => {};
 
 const getDaysInMonthUTC = (month, year) => {
   var date = new Date(Date.UTC(year, month, 1));

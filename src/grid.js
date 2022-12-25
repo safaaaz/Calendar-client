@@ -5,9 +5,11 @@ import { updateEvent } from "./eventApi";
 import { DateSingleton } from "./dateSingleton";
 
 let events;
-
 const initGrid = async () => {
-  await fetch(serverAddress + `/event/getEventsByMonth/${ DateSingleton.getInstance().getMonth() + 1 }`,
+  
+  await fetch(
+    serverAddress +
+      `/event/myEventsByMonth/${DateSingleton.getInstance().getMonth() + 1}`,
     {
       method: "GET",
       headers: {
@@ -15,15 +17,13 @@ const initGrid = async () => {
         token: localStorage.getItem("token"),
       },
     }
-  ).then((response) => {
-    if (response.ok) {
-      response.text().then((text) => {
-        events = JSON.parse(text);
-      });
-    } else {
-      alert(response.message);
-    }
-  });
+  )
+    .then((response) => {
+      return response.status == 200 ? response.json() : null;
+    })
+    .then((data) => {
+      events = data;
+    });
 
   for (let i = 0; i < 5; i++) {
     $("table").append(
@@ -102,24 +102,31 @@ const emptyCardElement = () => {
 
 const cardElement = (day) => {
   let htmlString = `<div class="card" style="width: 12rem; height: 18rem;">
-      <div class="card-body">
-      <h5 class="card-title">${day.getUTCDate()}</h5>
-      <p class="card-text">`;
-  if (events != undefined) {
-    events.forEach((element) => {
-      let date = new Date(element.dateTime);
-      if (date.getDate() == day.getUTCDate()) {
-        //  && date.getMonth() == day.getUTCMonth() && date.getYear() == day.getYear()
+    <div class="card-body">
+    <h5 class="card-title">${day.getUTCDate()}</h5>
+    <p class="card-text">`;
+    if (events != undefined) {
+      var eventsByDay=[];
+      events.forEach((element) => {
+        let date = new Date(element.dateTime);
+        if (date.getDate() == day.getUTCDate()) {
+          eventsByDay.push(element);
+        }
+      });
+      if(eventsByDay.length !=0){      
+        eventsByDay=eventsByDay.sort(function(b,a){
+        return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
+      });
+      eventsByDay.forEach((element)=>{
         htmlString += `<button id="event${element.id}">${element.title}</button><br>`;
-      }
-    });
-  }
+      });
+    }
+    }
   htmlString += `</p>
-        </div>
-    </div>`;
+    </div>
+  </div>`;
 
   return htmlString;
-
 };
 
 export { initGrid };

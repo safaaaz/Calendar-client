@@ -6,7 +6,7 @@ const createEvent = (data) => {
     method: "POST",
     body: JSON.stringify({
       title: data.title,
-      dateTime: data.date + "T" + calendarEvent.time,
+      dateTime: data.date + "T" + data.time,
       duration: data.duration,
       description: data.description,
       isPrivate: data.isPrivate,

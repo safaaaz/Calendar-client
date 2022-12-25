@@ -4,10 +4,10 @@ import { serverAddress } from "./constants";
 import { updateEvent } from "./eventApi";
 import { DateSingleton } from "./dateSingleton";
 
-let events;
+var events;
 
 const initGrid = async () => {
-  await fetch(serverAddress + `/event/getEventsByMonth/${ DateSingleton.getInstance().getMonth() + 1 }`,
+  await fetch(serverAddress + `/event/myEventsByMonth/${ DateSingleton.getInstance().getMonth() + 1 }`,
     {
       method: "GET",
       headers: {

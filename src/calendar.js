@@ -1,21 +1,21 @@
 import $ from "jquery";
 import { createCalendarEvent } from "./create_event_rest";
-import { updateCalendarEvent } from "./event";
+import { updateEvent } from "./eventApi";
 import { serverAddress } from "./constants";
 import { urlLocationHandler } from "./router";
-import { DateSingleton } from "./date";
+import { DateSingleton } from "./dateSingleton";
 
 let events;
 
 const initCalendar = async () => {
+
   let id;
   let attachments = [];
 
   //Set today as default day on event form
   var today = new Date();
-  var month = 12;
 
-  await fetch(serverAddress + "/event/getEventsByMonth/12", {
+  await fetch(serverAddress + `/event/getEventsByMonth/${DateSingleton.getInstance().getMonth+1}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",
@@ -30,7 +30,8 @@ const initCalendar = async () => {
       alert(response.message);
     }
   });
-  $("#date").attr("value", today.toISOString().substring(0, 10));
+
+  ("#date").attr("value", today.toISOString().substring(0, 10));
 
   // Get the modal
   let modal = $("#test-modal");
@@ -63,6 +64,30 @@ const initCalendar = async () => {
         $(`#attachment-${index}`).remove();
       });
     });
+  });
+
+  
+  $("#createEventBtn").on("click", () => {
+
+    let newAttachments = []
+
+    for(let attachment of attachments){
+      let dict = {}
+      newAttachments.push(dict["attachment"] = attachment)
+    }
+
+    const calendarEvent = {
+      title: $("#title").val(),
+      date: $("#date").val(),
+      time: $("#time").val(),
+      duration: $("#duration").val(),
+      location: $("#location").val(),
+      description: $("#description").val(),
+      attachments: newAttachments,
+      isPrivate: $("#isPrivate").is(":checked") ? true : false,
+    };
+    console.log(calendarEvent);
+    createCalendarEvent(calendarEvent);
   });
 
   $(".closeModalBtn").on("click", () => {
@@ -120,7 +145,7 @@ const initCalendar = async () => {
   $("#update-event-button").on("click", () => {
     let updateEventData = collectUpdateEventData(id);
     console.log(updateEventData);
-    updateCalendarEvent(updateEventData);
+    updateEvent(updateEventData);
   });
 
   let updateModal = $("#update-modal");

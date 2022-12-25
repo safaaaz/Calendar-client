@@ -1,10 +1,5 @@
 const date = new Date();
 
-// let month = date.getMonth() + 1
-// let year = date.getFullYear()
-
-// export {month, year}
-
 const DateSingleton = (function () {
   let instance;
 

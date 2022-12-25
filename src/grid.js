@@ -7,7 +7,9 @@ import { DateSingleton } from "./dateSingleton";
 let events;
 
 const initGrid = async () => {
-  await fetch(serverAddress + `/event/getEventsByMonth/${ DateSingleton.getInstance().getMonth() + 1 }`,
+  await fetch(
+    serverAddress +
+      `/event/myEventsByMonth/${DateSingleton.getInstance().getMonth() + 1}`,
     {
       method: "GET",
       headers: {
@@ -61,21 +63,21 @@ const initGrid = async () => {
     $(`#event${event.id}`).on("click", () => {
       updateModal.show();
       let id = event.id;
-        
+
       $("#update-event-button").on("click", () => {
         const updateEventData = {
-            id: id,
-            title: $("#update-title").val(),
-            date: $("#update-date").val(),
-            time: $("#update-time").val(),
-            duration: $("#update-duration").val(),
-            location: $("#update-location").val(),
-            description: $("#update-description").val(),
-            isPrivate: $("#update-isPrivate").is(":checked") ? true : false,
-          };
+          id: id,
+          title: $("#update-title").val(),
+          date: $("#update-date").val(),
+          time: $("#update-time").val(),
+          duration: $("#update-duration").val(),
+          location: $("#update-location").val(),
+          description: $("#update-description").val(),
+          isPrivate: $("#update-isPrivate").is(":checked") ? true : false,
+        };
 
-          updateEvent(updateEventData)
-      })
+        updateEvent(updateEventData);
+      });
     });
   }
 
@@ -119,7 +121,6 @@ const cardElement = (day) => {
     </div>`;
 
   return htmlString;
-
 };
 
 export { initGrid };

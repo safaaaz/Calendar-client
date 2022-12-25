@@ -3,7 +3,24 @@ import { serverAddress } from "./constants";
 import { urlLocationHandler } from "./router";
 import { validateEmail, validatePassword } from "./validations";
 
-const initLogin = (key) => {
+const loginUsingGithub=(code)=>{
+  fetch(serverAddress + "/auth/registerUsingGitHub?code="+code, {
+    method: "GET",
+    headers: {
+      "Content-Type": "application/json",
+    }
+  })
+  .then((response) => {
+    return response.status == 200 ? response.json() : null;
+  })
+    .then(async (token) => {
+      if (token != null) {
+          localStorage.setItem("token", token);
+          window.history.pushState({}, "", "/calendar");
+          await urlLocationHandler();
+      }});
+};
+const initLogin = () => {
   $("#login-button").on("click", async () => {
     const user = {
       email: $("#email").val(),
@@ -23,6 +40,7 @@ const initLogin = (key) => {
           return response.status == 200 ? response.json() : null;
         })
         .then(async (token) => {
+          console.log(token);
           if (token != null) {
             localStorage.setItem("token", token);
             window.history.pushState({}, "", "/calendar");
@@ -31,6 +49,8 @@ const initLogin = (key) => {
         });
     }
   });
+ 
 };
 
-export { initLogin };
+
+export { initLogin , loginUsingGithub };

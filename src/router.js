@@ -1,6 +1,7 @@
 import { initRegister } from "./register";
 import { initLogin } from "./login";
-import { initCalendar, initCreateEvent } from "./calendar";
+import { initCalendar } from "./calendar";
+import { initCalendar2 } from "./calendar2";
 import { initSettings} from "./settings"
 
 const initRouter = () => {
@@ -59,8 +60,7 @@ const urlRoutes = {
     title: "Calendar | " + urlPageTitle,
     description: "This is the calendar page",
     init: () => {
-      initCalendar();
-      initCreateEvent();
+      initCalendar2();
     },
   },
   "/settings": {

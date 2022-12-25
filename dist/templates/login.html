@@ -4,8 +4,6 @@ This is login
     <form>
       <h3>Login</h3>
         <div class="form-group">
-          <a href="https://github.com/login/oauth/authorize?client_id=1b188eb629fe1fbd2c32">login using github</a>
-
           <label for="email">Email address</label>
           <input type="text" class="form-control" id="email" placeholder="Enter email">
         </div>
@@ -15,14 +13,22 @@ This is login
         </div>
         <br>
     </form>
-    <br>
     <div class="row justify-content-center">
       <div class="col-6">
         <button id="login-button" type="click" class="btn btn-success">Login</button>
+        <br>
       </div>
       <div class="col-6">
         <button id="register-button" type="click" class="btn btn-primary">Register</button>
-      </div>    
+      </div>   
+      <div>
+      <a href="https://github.com/login/oauth/authorize?client_id=1b188eb629fe1fbd2c32&scope=user:email">
+        <button > <img src="https://cdn-icons-png.flaticon.com/512/270/270798.png" style="width:27px;height:auto;" /> 
+          Continue with GitHub </button>
+      </a>
+      </div>
+       
     </div>
+
 </div>
 <div class="col-4"></div>

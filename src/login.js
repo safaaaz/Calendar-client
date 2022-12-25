@@ -3,6 +3,16 @@ import { serverAddress } from "./constants";
 import { urlLocationHandler } from "./router";
 import { validateEmail, validatePassword } from "./validations";
 
+const loginUsingGithub=(code)=>{
+  fetch(serverAddress + "/auth/registerUsingGitHub?code="+code, {
+    method: "GET"})
+    .then(async (token) => {
+      if (token != null) {
+          localStorage.setItem("token", token);
+          window.history.pushState({}, "", "/calendar");
+          await urlLocationHandler();
+      }});
+}
 const initLogin = (key) => {
   $("#login-button").on("click", async () => {
     const user = {
@@ -31,6 +41,8 @@ const initLogin = (key) => {
         });
     }
   });
+ 
 };
 
-export { initLogin };
+
+export { initLogin,loginUsingGithub };

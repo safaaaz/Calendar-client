@@ -1,7 +1,8 @@
 import { initRegister } from "./register";
-import { initLogin } from "./login";
+import { initLogin ,loginUsingGithub} from "./login";
 import { initCalendar, initCreateEvent } from "./calendar";
 import { initSettings} from "./settings"
+import { serverAddress } from "./constants";
 
 const initRouter = () => {
   // create document click that watches the nav links only
@@ -85,6 +86,13 @@ const urlRoute = async (event) => {
 // create a function that handles the url location
 const urlLocationHandler = async () => {
   const location = window.location.pathname; // get the url path
+
+  //for register by github account
+  var url = new URL(window.location.href);
+  var code = url.searchParams.get("code");
+  if(location=="/" && code!=null){
+    loginUsingGithub(code);
+  }
   // if the path length is 0, set it to primary page route
   if (location.length == 0) {
     location = "/";

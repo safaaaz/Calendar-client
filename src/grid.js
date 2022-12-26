@@ -5,11 +5,7 @@ import { updateEvent } from "./eventApi";
 import { DateSingleton } from "./dateSingleton";
 
 let events;
-const initGrid = async () => {
-<<<<<<< HEAD
-=======
-  
->>>>>>> sprint-2
+const initGrid = async (calendarsMap) => {
   await fetch(
     serverAddress +
       `/event/myEventsByMonth/${DateSingleton.getInstance().getMonth() + 1}`,
@@ -85,6 +81,9 @@ const initGrid = async () => {
   $(".closeModalBtn").on("click", () => {
     updateModal.hide();
   });
+
+  console.log("CALENDARS MAP:", calendarsMap);
+  
 };
 
 const getDaysInMonthUTC = (month, year) => {
@@ -108,23 +107,23 @@ const cardElement = (day) => {
     <div class="card-body">
     <h5 class="card-title">${day.getUTCDate()}</h5>
     <p class="card-text">`;
-    if (events != undefined) {
-      var eventsByDay=[];
-      events.forEach((element) => {
-        let date = new Date(element.dateTime);
-        if (date.getDate() == day.getUTCDate()) {
-          eventsByDay.push(element);
-        }
-      });
-      if(eventsByDay.length !=0){      
-        eventsByDay=eventsByDay.sort(function(b,a){
+  if (events != undefined) {
+    var eventsByDay = [];
+    events.forEach((element) => {
+      let date = new Date(element.dateTime);
+      if (date.getDate() == day.getUTCDate()) {
+        eventsByDay.push(element);
+      }
+    });
+    if (eventsByDay.length != 0) {
+      eventsByDay = eventsByDay.sort(function (b, a) {
         return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
       });
-      eventsByDay.forEach((element)=>{
+      eventsByDay.forEach((element) => {
         htmlString += `<button id="event${element.id}">${element.title}</button><br>`;
       });
     }
-    }
+  }
   htmlString += `</p>
     </div>
   </div>`;

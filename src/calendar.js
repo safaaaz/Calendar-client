@@ -15,7 +15,7 @@ const initCalendar = async () => {
   //Set today as default day on event form
   var today = new Date();
 
-  await fetch(serverAddress + `/event/myEventsByMonth/${DateSingleton.getInstance().getMonth+1}`, {
+  await fetch(serverAddress + `/event/myEventsByMonth/${DateSingleton.getInstance().getMonth()+1}`, {
     method: "GET",
     headers: {
       "Content-Type": "application/json",

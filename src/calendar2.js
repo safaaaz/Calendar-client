@@ -1,7 +1,7 @@
 import $ from "jquery";
 import { initDateToggle } from "./dateToggle";
 import { initGrid } from "./grid";
-import { initCreateEventModal } from "./modal";
+import { initCreateEventModal, initUpdateEventModal } from "./modal";
 import { initFilterSideBar, initFilterBtn } from "./filterSideBar";
 
 let id;
@@ -12,6 +12,7 @@ const initCalendar2 = async (calendarsMap) => {
   initGrid(calendarsMap);
 
   initCreateEventModal();
+  initUpdateEventModal();
 
   initFilterSideBar(calendarsMap);
 

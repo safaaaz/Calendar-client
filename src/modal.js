@@ -20,7 +20,6 @@ const initCreateEventModal = () => {
   });
 
   // add attachments dynamically
-
   $("#add-button").on("click", () => {
     $("#attachments").empty();
     attachments.push($("#attachment").val());
@@ -65,11 +64,17 @@ const initCreateEventModal = () => {
       isPrivate: $("#isPrivate").is(":checked") ? true : false,
     };
     console.log(calendarEvent);
+    //clean attachments
+    attachments = [];
+    $("#attachments").empty();
     createEvent(calendarEvent);
   });
 
   // close modal button
   $(".closeModalBtn").on("click", () => {
+    attachments = [];
+    $("#attachments").empty();
+    console.log("closing modal");
     modal.hide();
   });
 };
@@ -139,7 +144,6 @@ const initUpdateEventModal = (id) => {
 
   // close modal button
   $(".closeModalBtn").on("click", () => {
-    attachments = [];
     modal.hide();
   });
 };

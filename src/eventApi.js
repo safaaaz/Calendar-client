@@ -31,6 +31,7 @@ const createEvent = (data) => {
     .then((response) => {
       alert("Event " + response.title + " added successfully");
       console.log(response);
+      
       window.history.pushState({}, "", "/calendar");
       urlLocationHandler();
     })

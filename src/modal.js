@@ -1,5 +1,4 @@
 import $ from "jquery";
-import { createCalendarEvent } from "./create_event_rest";
 import { createEvent } from "./eventApi";
 
 let attachments = [];
@@ -24,6 +23,7 @@ const initCreateEventModal = () => {
   $("#add-button").on("click", () => {
     $("#attachments").empty();
     attachments.push($("#attachment").val());
+    console.log(attachments);
 
     attachments.forEach((attachment, index) => {
       if (attachment != "") {
@@ -38,17 +38,19 @@ const initCreateEventModal = () => {
       $(`#delete-attachment-${index}`).on("click", () => {
         attachments[index] = "";
         $(`#attachment-${index}`).remove();
+        console.log(attachments);
       });
     });
   });
 
   // create event button
   $("#createEventBtn").on("click", () => {
-    let newAttachments = [];
-
+    //clean attachments array
+    let eventAttachments = [];
     for (let attachment of attachments) {
-      let dict = {};
-      newAttachments.push((dict["attachment"] = attachment));
+      if (!attachment == "") {
+        eventAttachments.push(attachment);
+      }
     }
 
     const calendarEvent = {
@@ -58,15 +60,21 @@ const initCreateEventModal = () => {
       duration: $("#duration").val(),
       location: $("#location").val(),
       description: $("#description").val(),
-      attachments: newAttachments,
+      attachments: eventAttachments,
       isPrivate: $("#isPrivate").is(":checked") ? true : false,
     };
     console.log(calendarEvent);
+    //clean attachments
+    attachments = [];
+    $("#attachments").empty();
     createEvent(calendarEvent);
   });
 
   // close modal button
   $(".closeModalBtn").on("click", () => {
+    attachments = [];
+    $("#attachments").empty();
+    console.log("closing modal");
     modal.hide();
   });
 };
@@ -79,27 +87,28 @@ const initUpdateEventModal = (id) => {
   // Get the modal
   let modal = $("#update-modal");
 
-  // add attachments dynamically
-  $("#add-button").on("click", () => {
-    $("#attachments").empty();
-    attachments.push($("#attachment").val());
+  // // add attachments dynamically
+  // $("#add-button").on("click", () => {
+  //   console.log(attachments);
+  //   $("#attachments").empty();
+  //   attachments.push($("#attachment").val());
 
-    attachments.forEach((attachment, index) => {
-      if (attachment != "") {
-        $("#attachments").append(
-          `<li id="attachment-${index}" class="list-group-item"> ${attachment} <button id="delete-attachment-${index}" type="button" class="btn btn-danger">Delete</button></li>`
-        );
-      }
-    });
+  //   attachments.forEach((attachment, index) => {
+  //     if (attachment != "") {
+  //       $("#attachments").append(
+  //         `<li id="attachment-${index}" class="list-group-item"> ${attachment} <button id="delete-attachment-${index}" type="button" class="btn btn-danger">Delete</button></li>`
+  //       );
+  //     }
+  //   });
 
-    // we add listener for every delete button, so we could remove attachment if we added something we regret about
-    attachments.forEach((_, index) => {
-      $(`#delete-attachment-${index}`).on("click", () => {
-        attachments[index] = "";
-        $(`#attachment-${index}`).remove();
-      });
-    });
-  });
+  //   // we add listener for every delete button, so we could remove attachment if we added something we regret about
+  //   attachments.forEach((_, index) => {
+  //     $(`#delete-attachment-${index}`).on("click", () => {
+  //       attachments[index] = "";
+  //       $(`#attachment-${index}`).remove();
+  //     });
+  //   });
+  // });
 
   // create event button
   $("#update-event-button").on("click", () => {
@@ -111,14 +120,14 @@ const initUpdateEventModal = (id) => {
     }
 
     const calendarEvent = {
-      id:id,
+      id: id,
       title: $("#title").val(),
       date: $("#date").val(),
       time: $("#time").val(),
       duration: $("#duration").val(),
       location: $("#location").val(),
       description: $("#description").val(),
-      attachments: newAttachments,
+      //attachments: newAttachments,
       isPrivate: $("#isPrivate").is(":checked") ? true : false,
     };
     console.log(calendarEvent);
@@ -130,6 +139,6 @@ const initUpdateEventModal = (id) => {
     console.log("check");
     modal.hide();
   });
-}
+};
 
 export { initCreateEventModal, initUpdateEventModal };

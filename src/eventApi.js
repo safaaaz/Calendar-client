@@ -13,6 +13,7 @@ const createEvent = (data) => {
       description: data.description,
       isPrivate: data.isPrivate,
       location: data.location,
+      attachments: data.attachments,
     }),
     headers: {
       token: localStorage.getItem("token"),
@@ -20,18 +21,19 @@ const createEvent = (data) => {
     },
   })
     .then((response) => {
+      if (!response.status == 200) {
+        alert(response.message);
+        return;
+      }
+      console.log(response);
       return response.json();
     })
     .then((response) => {
-      if (response != undefined) {
-        alert("Event " + response.title + " added successfully");
-        //todo: close modal
-        console.log(response);
-        window.history.pushState({}, "", "/calendar");
-        urlLocationHandler();
-      } else {
-        alert(response.message);
-      }
+      alert("Event " + response.title + " added successfully");
+      console.log(response);
+      
+      window.history.pushState({}, "", "/calendar");
+      urlLocationHandler();
     })
     .catch((error) => {
       console.error(`ERROR: ${error}`);

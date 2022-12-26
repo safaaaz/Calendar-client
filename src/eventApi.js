@@ -13,6 +13,7 @@ const createEvent = (data) => {
       description: data.description,
       isPrivate: data.isPrivate,
       location: data.location,
+      attachments: data.attachments,
     }),
     headers: {
       token: localStorage.getItem("token"),
@@ -20,26 +21,26 @@ const createEvent = (data) => {
     },
   })
     .then((response) => {
+      if (!response.status == 200) {
+        alert(response.message);
+        return;
+      }
+      console.log(response);
       return response.json();
     })
     .then((response) => {
-      if (response!=undefined) {
-        alert("Event " + response.title + " added successfully");
-        //todo: close modal
-        console.log(response);
-        window.history.pushState({}, "", "/calendar");
-        urlLocationHandler();
-      } else {
-        alert(response.message);
-      }
+      alert("Event " + response.title + " added successfully");
+      console.log(response);
+      window.history.pushState({}, "", "/calendar");
+      urlLocationHandler();
     })
     .catch((error) => {
       console.error(`ERROR: ${error}`);
     });
 };
-const getEvent=async (id)=>{
+const getEvent = async (id) => {
   var event;
-  await fetch(serverAddress + "/event/findOne/"+id, {
+  await fetch(serverAddress + "/event/findOne/" + id, {
     method: "GET",
     headers: {
       token: localStorage.getItem("token"),
@@ -50,11 +51,11 @@ const getEvent=async (id)=>{
       return response.json();
     })
     .then((response) => {
-        console.log(response);
-        event = response;
-    })
-    return event;
-}
+      console.log(response);
+      event = response;
+    });
+  return event;
+};
 const updateEvent = (data) => {
   fetch(serverAddress + "/event/update", {
     method: "POST",
@@ -76,7 +77,7 @@ const updateEvent = (data) => {
       return response.json();
     })
     .then((response) => {
-      if (response!=undefined) {
+      if (response != undefined) {
         alert("Event " + response.title + " has been updated successfully");
         //todo: close modal
         console.log(response);
@@ -91,4 +92,4 @@ const updateEvent = (data) => {
     });
 };
 
-export { createEvent, updateEvent ,getEvent};
+export { createEvent, updateEvent, getEvent };

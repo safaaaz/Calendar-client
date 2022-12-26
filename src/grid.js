@@ -120,7 +120,7 @@ const setEventDetails = (event) => {
   $("#update-isPrivate").prop("checked", event.private);
 };
 
-const activateEvents = (myEvents, sharedEvents) => {
+const activateEvents = (myEvents, sharedEventsMap) => {
   // for each event we have to activate a listener for update modal
   let updateModal = $("#update-modal");
 
@@ -151,8 +151,9 @@ const activateEvents = (myEvents, sharedEvents) => {
     });
   }
 
-  for (let events of sharedEvents) {
-    for (let event of events) {
+  for (let user in sharedEventsMap) {
+    let sharedEvents = sharedEventsMap[user];
+    for (let event of sharedEvents) {
       $(`#event${event.id}`).on("click", async (button) => {
         console.log(button.target.getAttribute("eventId"));
         let id = button.target.getAttribute("eventId");

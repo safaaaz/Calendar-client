@@ -1,7 +1,7 @@
 import $ from "jquery";
 
 import { serverAddress } from "./constants";
-import { updateEvent } from "./eventApi";
+import { updateEvent ,getEvent} from "./eventApi";
 import { DateSingleton } from "./dateSingleton";
 
 let events;
@@ -56,12 +56,26 @@ const initGrid = async () => {
 
   // for each event we have to activate a listener for update modal
   let updateModal = $("#update-modal");
-
+  const setEventDetails=(event)=>{
+    $("#update-title").val(event.title);
+    const eventDate = new Date(event.dateTime);
+    var eventTime = eventDate.toTimeString().split(' ')[0];
+    const eventDay = eventDate.toISOString().split('T')[0];
+    $("#update-date").val(eventDay),
+    $("#update-time").val(eventTime),
+    $("#update-duration").val(event.duration),
+    $("#update-location").val(event.location),
+    $("#update-description").val(event.description),
+    $("#update-isPrivate").prop("checked", event.private);
+  }
   for (let event of events) {
-    $(`#event${event.id}`).on("click", () => {
+    $(`#event${event.id}`).on("click",async (button) => {
+      console.log(button.target.getAttribute('eventId'));
+      let id = button.target.getAttribute('eventId');
+       var event =await getEvent(id);
+      setEventDetails(event);
       updateModal.show();
-      let id = event.id;
-        
+
       $("#update-event-button").on("click", () => {
         const updateEventData = {
             id: id,
@@ -118,7 +132,7 @@ const cardElement = (day) => {
         return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
       });
       eventsByDay.forEach((element)=>{
-        htmlString += `<button id="event${element.id}">${element.title}</button><br>`;
+        htmlString += `<button id="event${element.id}" eventId="${element.id}">${element.title}</button><br>`;
       });
     }
     }

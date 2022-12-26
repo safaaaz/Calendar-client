@@ -1,4 +1,6 @@
+import { event } from "jquery";
 import { serverAddress } from "./constants";
+import { urlLocationHandler } from "./router";
 
 const createEvent = (data) => {
   console.log("Calling localhost:8080/event/add");
@@ -21,11 +23,12 @@ const createEvent = (data) => {
       return response.json();
     })
     .then((response) => {
-      if (response.status == 200) {
+      if (response!=undefined) {
         alert("Event " + response.title + " added successfully");
         //todo: close modal
         console.log(response);
         window.history.pushState({}, "", "/calendar");
+        urlLocationHandler();
       } else {
         alert(response.message);
       }
@@ -34,7 +37,24 @@ const createEvent = (data) => {
       console.error(`ERROR: ${error}`);
     });
 };
-
+const getEvent=async (id)=>{
+  var event;
+  await fetch(serverAddress + "/event/findOne/"+id, {
+    method: "GET",
+    headers: {
+      token: localStorage.getItem("token"),
+      "Content-Type": "application/json",
+    },
+  })
+    .then((response) => {
+      return response.json();
+    })
+    .then((response) => {
+        console.log(response);
+        event = response;
+    })
+    return event;
+}
 const updateEvent = (data) => {
   fetch(serverAddress + "/event/update", {
     method: "POST",
@@ -56,11 +76,12 @@ const updateEvent = (data) => {
       return response.json();
     })
     .then((response) => {
-      if (response.status == 200) {
-        alert("Event " + response.title + " added successfully");
+      if (response!=undefined) {
+        alert("Event " + response.title + " has been updated successfully");
         //todo: close modal
         console.log(response);
         window.history.pushState({}, "", "/calendar");
+        urlLocationHandler();
       } else {
         alert(response.message);
       }
@@ -70,4 +91,4 @@ const updateEvent = (data) => {
     });
 };
 
-export { createEvent, updateEvent };
+export { createEvent, updateEvent ,getEvent};

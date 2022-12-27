@@ -1,5 +1,4 @@
 import $ from "jquery";
-
 import { serverAddress } from "./constants";
 import { updateEvent, getEvent } from "./eventApi";
 import { DateSingleton } from "./dateSingleton";
@@ -19,6 +18,7 @@ const initGrid = async (sharedEventsMap) => {
   placeSharedEvents(sharedEventsMap);
 
   activateEvents(myEvents, sharedEventsMap);
+
 };
 
 const fetchMyEvents = async () => {

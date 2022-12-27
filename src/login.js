@@ -43,6 +43,7 @@ const initLogin = () => {
           console.log(token);
           if (token != null) {
             localStorage.setItem("token", token);
+            localStorage.setItem("email", user.email);
             window.history.pushState({}, "", "/calendar");
             await urlLocationHandler();
           }

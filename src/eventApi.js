@@ -1,7 +1,7 @@
 import { event } from "jquery";
 import { serverAddress } from "./constants";
 import { urlLocationHandler } from "./router";
-
+import {stompClient} from "./notifications";
 const createEvent = (data) => {
   console.log("Calling localhost:8080/event/add");
   fetch(serverAddress + "/event/add", {
@@ -81,9 +81,14 @@ const updateEvent = (data) => {
     })
     .then((response) => {
       if (response != undefined) {
-        alert("Event " + response.title + " has been updated successfully");
+        alert("Event " + response.eventTitle + " has been updated successfully");
         //todo: close modal
         console.log(response);
+        stompClient.send("/app/update/", [],JSON.stringify({
+          eventId: response.eventId,
+          eventTitle: response.eventTitle,
+          editorEmail: response.editorEmail,
+      }));
         window.history.pushState({}, "", "/calendar");
         urlLocationHandler();
       } else {
@@ -94,5 +99,4 @@ const updateEvent = (data) => {
       console.error(`ERROR: ${error}`);
     });
 };
-
 export { createEvent, updateEvent, getEvent };

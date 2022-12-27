@@ -105,6 +105,33 @@ const placeSharedEvents = (sharedEventsMap) => {
   }
 };
 
+const initInviteGuestBtn = (eventId) => {
+  $("#invite-guest-btn").on("click", () => {
+    let email = $("#invite-guest").val();
+    fetch(serverAddress + "/event/inviteGuest/", {
+      method: "POST",
+      body: JSON.stringify({ email: email }),
+      headers: {
+        "Content-Type": "application/json",
+        token: localStorage.getItem("token"),
+        eventId: eventId,
+      },
+    })
+      .then((response) => {
+        console.log(response.status);
+        return Promise.all([response.status, response.json()]);
+      })
+      .then(([status, body]) => {
+        console.log(status, body);
+        if (status == 200) {
+          alert(`User ${body.email} invited successfully!`);
+        } else {
+          alert(body.message);
+        }
+      });
+  });
+};
+
 const makeAdmin = async (eventId, userEmail) => {
   var success = false;
   await fetch(serverAddress + "/event/makeAdmin/", {
@@ -119,16 +146,29 @@ const makeAdmin = async (eventId, userEmail) => {
     }),
   })
     .then((response) => {
-      if (!response.status == 200) {
-        alert(response.message);
-        return;
-      }
-      return response.json();
+      console.log(response.status);
+      return Promise.all([response.status, response.json()]);
     })
-    .then((response) => {
-      console.log("make admin res:", res);
-      success = true;
+    .then(([status, body]) => {
+      console.log(status, body);
+      if (status == 200) {
+        console.log(body);
+        alert(`admin added: ${body.email}`);
+      } else {
+        alert(body.message);
+      }
     });
+  // .then((response) => {
+  //   if (!response.status == 200) {
+  //     alert(response.message);
+  //     return;
+  //   }
+  //   return response.json();
+  // })
+  // .then((response) => {
+  //   console.log("make admin res:", res);
+  //   success = true;
+  // });
   return success;
 };
 
@@ -141,7 +181,25 @@ const guestsElements = async (roles, statuses, eventId) => {
     li = document.createElement(`li`);
     let div = document.createElement(`div`);
     let email = document.createElement(`span`);
-    email.innerHTML = `${roles[i].user.email} `;
+    email.innerHTML = `${roles[i].user.email}`;
+    let status = document.createElement("span");
+    status.innerHTML = `${statuses[i].status}   `;
+    console.log(statuses[i].status);
+    switch (statuses[i].status) {
+      case "PENDING":
+        status.setAttribute("class", "badge rounded-pill bg-warning text-dark");
+        break;
+      case "APPROVED":
+        status.setAttribute("class", "badge rounded-pill bg-success");
+        break;
+      case "TENTATIVE":
+        status.setAttribute("class", "badge rounded-pill bg-secondary");
+        break;
+      case "REJECTED":
+        status.setAttribute("class", "badge rounded-pill bg-danger");
+        break;
+    }
+
     div.appendChild(email);
     if (roles[i].role == "GUEST") {
       let button = document.createElement(`button`);
@@ -150,7 +208,6 @@ const guestsElements = async (roles, statuses, eventId) => {
         e.preventDefault();
         console.log("make admin clicked!!");
         makeAdmin(eventId, `${roles[i].user.email}`);
-        alert("admin added: " + `${roles[i].user.email}`);
         updateModal.hide();
         updateModal.show();
         // window.history.pushState({}, "", "/calendar");
@@ -158,10 +215,12 @@ const guestsElements = async (roles, statuses, eventId) => {
       });
       div.appendChild(button);
     } else {
-      let admin = document.createElement("u");
+      let admin = document.createElement("span");
+      admin.setAttribute("class", "badge bg-secondary");
       admin.innerHTML = `admin`;
       div.appendChild(admin);
     }
+    div.appendChild(status);
     li.appendChild(div);
     console.log(roles[i].user.email, roles[i].role);
     console.log(statuses[i].user.email, statuses[i].status);
@@ -193,10 +252,12 @@ const getEventGuests = async (eventId) => {
   return guests;
 };
 const setEventDetails = async (event) => {
+  console.log(event);
   $("#update-title").val(event.title);
   const eventDate = new Date(event.dateTime);
   var eventTime = eventDate.toTimeString().split(" ")[0];
   const eventDay = eventDate.toISOString().split("T")[0];
+  $("#organizer-label").text("Organizer: " + event.organizer.email);
   $("#update-date").val(eventDay),
     $("#update-time").val(eventTime),
     $("#update-duration").val(event.duration),
@@ -224,6 +285,7 @@ const activateEvents = (myEvents, sharedEventsMap) => {
       var event = await getEvent(id);
 
       setEventDetails(event);
+      initInviteGuestBtn(id);
 
       updateModal.show();
 

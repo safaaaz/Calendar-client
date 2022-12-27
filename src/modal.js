@@ -85,15 +85,7 @@ const initUpdateEventModal = (id) => {
   $("#date").attr("value", today.toISOString().substring(0, 10));
 
   // Get the modal
-  let modal = $("#test-modal");
-
-  // Get the button that opens the modal
-  let button = $("#modal-button");
-
-  // When the user clicks the button, open the modal
-  button.on("click", () => {
-    modal.show();
-  });
+  let modal = $("#update-modal");
 
   // // add attachments dynamically
   // $("#add-button").on("click", () => {
@@ -144,6 +136,7 @@ const initUpdateEventModal = (id) => {
 
   // close modal button
   $(".closeModalBtn").on("click", () => {
+    console.log("check");
     modal.hide();
   });
 };

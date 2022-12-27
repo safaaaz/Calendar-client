@@ -77,7 +77,35 @@ const injectCards = () => {
   for (let i in days) {
     $(`#${parseInt(i) + offset}`).append(cardElement(days[i]));
   }
-  const guestsElements =async (roles,statuses)=>{
+};
+const placeMyEvents = (myEvents) => {
+  // add my own events
+  for (let event of myEvents) {
+    let dateStamp = event.dateTime.split("T")[0];
+
+    $(`#${dateStamp}`).append(
+      `<button id="event${event.id}" class="btn btn-primary" eventId="${event.id}">${event.title}</button><br>`
+    );
+  }
+};
+
+const placeSharedEvents = (sharedEventsMap) => {
+  let colorArray = ["secondary", "success", "danger", "info", "dark"];
+
+  for (let user in sharedEventsMap) {
+
+    let color = colorArray[Math.floor(Math.random() * 5)];
+    let sharedEvents = sharedEventsMap[user];
+
+    for (let event of sharedEvents) {
+      let dateStamp = event.dateTime.split("T")[0];
+      $(`#${dateStamp}`).append(
+        `<button id="event${event.id}" class="btn btn-${color}" eventId="${event.id}">${event.title}</button><br>`
+      );
+    }
+  }
+};
+const guestsElements =async (roles,statuses)=>{
     console.log("arrive to guest elements");
     //console.log(guests.data);
     const list = document.createDocumentFragment();
@@ -107,7 +135,7 @@ const injectCards = () => {
       list.appendChild(li);
     }
     return list;
-    }
+  }
   
   // for each event we have to activate a listener for update modal
   let updateModal = $("#update-modal");
@@ -149,32 +177,38 @@ const injectCards = () => {
     $("#update-isPrivate").prop("checked", event.private);
     $("#event-guest").append(await guestsElements(event.userRoles,event.userStatuses));
   }
-  for (let event of events) {
-    $(`#event${event.id}`).on("click",async (button) => {
-      console.log(button.target.getAttribute('eventId'));
-      let id = button.target.getAttribute('eventId');
-      let event =await getEvent(id);
-      setEventDetails(event);
 
-      updateModal.show();
-
-      $("#update-event-button").on("click", () => {
-        const updateEventData = {
-          id: id,
-          title: $("#update-title").val(),
-          date: $("#update-date").val(),
-          time: $("#update-time").val(),
-          duration: $("#update-duration").val(),
-          location: $("#update-location").val(),
-          description: $("#update-description").val(),
-          isPrivate: $("#update-isPrivate").is(":checked") ? true : false,
-        };
-
-        updateEvent(updateEventData);
+  const activateEvents = (myEvents, sharedEventsMap) => {
+    // for each event we have to activate a listener for update modal
+    let updateModal = $("#update-modal");
+  
+    for (let event of myEvents) {
+      $(`#event${event.id}`).on("click", async (button) => {
+        console.log(button.target.getAttribute("eventId"));
+        let id = button.target.getAttribute("eventId");
+        var event = await getEvent(id);
+  
+        setEventDetails(event);
+  
+        updateModal.show();
+  
+        $("#update-event-button").on("click", () => {
+          const updateEventData = {
+            id: id,
+            title: $("#update-title").val(),
+            date: $("#update-date").val(),
+            time: $("#update-time").val(),
+            duration: $("#update-duration").val(),
+            location: $("#update-location").val(),
+            description: $("#update-description").val(),
+            isPrivate: $("#update-isPrivate").is(":checked") ? true : false,
+          };
+  
+          updateEvent(updateEventData);
+        });
       });
-    });
-  }
-
+    }
+  
   for (let user in sharedEventsMap) {
     let sharedEvents = sharedEventsMap[user];
     for (let event of sharedEvents) {
@@ -201,9 +235,8 @@ const injectCards = () => {
         });
       });
     }
+  };
   }
-};
-
 const getDaysInMonthUTC = (month, year) => {
   var date = new Date(Date.UTC(year, month, 1));
   var days = [];

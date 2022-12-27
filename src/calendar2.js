@@ -15,7 +15,6 @@ const initCalendar2 = async (calendarsMap) => {
   initGrid(calendarsMap);
 
   initCreateEventModal();
-  initUpdateEventModal();
 
   initFilterSideBar(calendarsMap);
   initFilterBtn();

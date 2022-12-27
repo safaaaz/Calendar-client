@@ -70,6 +70,7 @@ const updateEvent = (data) => {
       location: data.location,
     }),
     headers: {
+      eventId: data.id,
       token: localStorage.getItem("token"),
       "Content-Type": "application/json",
     },

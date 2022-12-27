@@ -1,5 +1,5 @@
 import $ from "jquery";
-import { createEvent } from "./eventApi";
+import { createEvent, updateEvent } from "./eventApi";
 
 let attachments = [];
 
@@ -131,7 +131,7 @@ const initUpdateEventModal = (id) => {
       isPrivate: $("#isPrivate").is(":checked") ? true : false,
     };
     console.log(calendarEvent);
-    createEvent(calendarEvent);
+    updateEvent(calendarEvent);
   });
 
   // close modal button

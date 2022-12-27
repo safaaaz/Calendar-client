@@ -1,7 +1,10 @@
 import { initRegister } from "./register";
-import { initLogin } from "./login";
-import { initCalendar, initCreateEvent } from "./calendar";
-import { initSettings} from "./settings"
+import { initLogin, loginUsingGithub } from "./login";
+import { initCalendar } from "./calendar";
+import { initCalendar2 } from "./calendar2";
+
+import { initSettings } from "./settings";
+import { serverAddress } from "./constants";
 
 const initRouter = () => {
   // create document click that watches the nav links only
@@ -58,9 +61,8 @@ const urlRoutes = {
     template: "templates/calendar.html",
     title: "Calendar | " + urlPageTitle,
     description: "This is the calendar page",
-    init: () => {
-      initCalendar();
-      initCreateEvent();
+    init: (calendarsMap) => {
+      initCalendar2(calendarsMap);
     },
   },
   "/settings": {
@@ -71,6 +73,11 @@ const urlRoutes = {
       initSettings();
     },
   },
+};
+
+const redirectToCalendarPageWithMap = (page, calendarsMap) => {
+  window.history.pushState({}, "", page);
+  urlLocationHandlerWithMap(calendarsMap);
 };
 
 // create a function that watches the url and calls the urlLocationHandler
@@ -85,6 +92,13 @@ const urlRoute = async (event) => {
 // create a function that handles the url location
 const urlLocationHandler = async () => {
   const location = window.location.pathname; // get the url path
+
+  //for register by github account
+  var url = new URL(window.location.href);
+  var code = url.searchParams.get("code");
+  if (location == "/" && code != null) {
+    loginUsingGithub(code);
+  }
   // if the path length is 0, set it to primary page route
   if (location.length == 0) {
     location = "/";
@@ -107,4 +121,23 @@ const urlLocationHandler = async () => {
     .setAttribute("content", route.description);
 };
 
-export { initRouter, urlLocationHandler };
+const urlLocationHandlerWithMap = async (calendarsMap) => {
+  const location = window.location.pathname;
+  if (location.length == 0) {
+    location = "/";
+  }
+  const route = urlRoutes[location] || urlRoutes["404"];
+
+  console.log(route.template);
+
+  const html = await fetch(route.template).then((response) => response.text());
+  document.getElementById("content").innerHTML = html;
+  route.init(calendarsMap);
+  console.log("Map in pass to route init", calendarsMap);
+  document.title = route.title;
+  document
+    .querySelector('meta[name="description"]')
+    .setAttribute("content", route.description);
+};
+
+export { initRouter, urlLocationHandler, redirectToCalendarPageWithMap };

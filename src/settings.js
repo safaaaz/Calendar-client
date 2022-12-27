@@ -19,7 +19,7 @@ const initSettings = () => {
       }),
       headers: {
         "Content-Type": "application/json",
-        token: "LI2JRoohTk5i3bXSbjOXB7xjmaoSErVz",
+        token: localStorage.getItem("token"),
       },
     });
   });

@@ -1,17 +1,23 @@
 import $ from "jquery";
 import { initDateToggle } from "./dateToggle";
 import { initGrid } from "./grid";
-import { initCreateEventModal } from "./modal";
+import { initCreateEventModal, initUpdateEventModal } from "./modal";
+import { initFilterSideBar, initFilterBtn } from "./filterSideBar";
+import { initShareBtn } from "./share";
 
 let id;
 
-const initCalendar2 = async () => {
+const initCalendar2 = async (calendarsMap) => {
 
   initDateToggle();
+  initShareBtn();
 
-  initGrid();
-  
+  initGrid(calendarsMap);
+
   initCreateEventModal();
+
+  initFilterSideBar(calendarsMap);
+  initFilterBtn();
 };
 
 export { initCalendar2 };

@@ -1,0 +1,112 @@
+import $ from "jquery";
+import { serverAddress } from "./constants";
+import { DateSingleton } from "./dateSingleton";
+import { redirectToCalendarPageWithMap } from "./router";
+
+const initFilterBtn = async () => {
+  //get checked emails and send to server
+  $("#filterBtn").on("click", () => {
+    let selectedEmails = [];
+    var emails = $("#sharedCalendars").find(".friends");
+    for (let email of emails) {
+      if (email.checked) {
+        selectedEmails.push(email.id);
+      }
+    }
+    console.log(selectedEmails);
+    filterCalendars(selectedEmails);
+  });
+};
+
+const filterCalendars = (emails) => {
+  //todo: pass current month
+  fetch(
+    serverAddress +
+      `/event/share/sharedCalendars/${
+        DateSingleton.getInstance().getMonth() + 1
+      }`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        emails: emails,
+      }),
+      headers: {
+        token: localStorage.getItem("token"),
+        "Content-Type": "application/json",
+      },
+    }
+  )
+    .then((response) => {
+      if (!response.status == 200) {
+        alert("can't fetch calendars");
+        return;
+      }
+      console.log(response);
+      return response.json();
+    })
+    .then(async (res) => {
+      console.log("Result from fetch", res);
+      redirectToCalendarPageWithMap("/calendar", res);
+    });
+};
+
+const list = document.createDocumentFragment();
+
+const initFilterSideBar = (calendarsMap) => {
+  fetch(serverAddress + "/event/share/shareList", {
+    method: "GET",
+    headers: {
+      token: localStorage.getItem("token"),
+    },
+  })
+    .then((response) => {
+      if (!response.status == 200) {
+        alert("can't fetch calendars");
+        return;
+      }
+      console.log(response);
+      return response.json();
+    })
+    .then((res) => {
+      console.log(res);
+      let users = res;
+
+      users.map(function (user) {
+        let li = document.createElement("li");
+        let checkboxInput = document.createElement("input");
+        checkboxInput.setAttribute("type", "checkbox");
+        checkboxInput.setAttribute("id", `${user.email}`);
+        checkboxInput.setAttribute("class", "friends");
+
+        //set checkbox label
+        let checkboxLabel = document.createElement("label");
+        checkboxLabel.setAttribute("for", `${user.email}`);
+        checkboxLabel.innerHTML = `${user.name} (${user.email}) `;
+
+        //keep previous friends selection
+        if (calendarsMap != undefined) {
+          if (calendarsMap.hasOwnProperty(user.email)) {
+            checkboxInput.checked = true;
+          }
+        }
+
+        checkboxInput.onchange = function () {
+          if (this.checked) {
+            console.log("selected " + `${user.email}` + " calendar");
+          } else {
+            console.log("unselected " + `${user.email}` + " calendar");
+          }
+        };
+
+        li.appendChild(checkboxInput);
+        li.appendChild(checkboxLabel);
+        list.appendChild(li);
+      });
+      $("#sharedCalendars").append(list);
+    });
+
+  console.log("in filter side bar: ", calendarsMap);
+  //   Object.keys(calendarsMap).forEach((key) => {
+};
+
+export { initFilterSideBar, initFilterBtn };

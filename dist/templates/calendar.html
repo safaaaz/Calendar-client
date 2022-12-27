@@ -88,7 +88,7 @@ This is calendar
     <div class="modal-dialog" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">Update current new event</h5>
+          <h5 class="modal-title">Update current event</h5>
           <button type="button" class="close closeModalBtn" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span>
           </button>
@@ -146,13 +146,20 @@ This is calendar
     </div>
   </div>
   <!----------------------------------------------------------------------------------------------------------------------->
+  <div>
+    <ul id="sharedCalendars" class="no-bullets"></ul>
+    <button id="filterBtn" class="btn btn-primary">Filter</button>
+  </div>
 </div>
 <div class="col-10">
   <div>
     <button id="left-button" type="button" class="btn btn-light"><</button>
-    <span id="month">Month</span>, <span id="year">Year</span>
-    <button id="right-button" type="button" class="btn btn-light">></button>
+        <span id="month">Month</span>, <span id="year">Year</span>
+        <button id="right-button" type="button" class="btn btn-light">></button>
   </div>
+  <label for="invite-friend">Share with a friend:</label>
+  <input type="text" id="invite-friend" name="invite-friend">
+  <button id="share-button" type="button" class="btn btn-secondary">Share</button>
   <table>
     <tr>
       <th>Sunday</th>

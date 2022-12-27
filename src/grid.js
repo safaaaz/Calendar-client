@@ -1,12 +1,29 @@
 import $ from "jquery";
 
 import { serverAddress } from "./constants";
-import { updateEvent ,getEvent} from "./eventApi";
+import { updateEvent, getEvent } from "./eventApi";
 import { DateSingleton } from "./dateSingleton";
+import { initUpdateEventModal } from "./modal";
 
-let events;
-const initGrid = async () => {
-  
+let myEvents;
+
+const initGrid = async (sharedEventsMap) => {
+  myEvents = await fetchMyEvents();
+
+  initHtmlTable();
+
+  injectCards();
+
+  placeMyEvents(myEvents);
+
+  placeSharedEvents(sharedEventsMap);
+
+  activateEvents(myEvents, sharedEventsMap);
+};
+
+const fetchMyEvents = async () => {
+  let events;
+
   await fetch(
     serverAddress +
       `/event/myEventsByMonth/${DateSingleton.getInstance().getMonth() + 1}`,
@@ -25,20 +42,27 @@ const initGrid = async () => {
       events = data;
     });
 
+  return events;
+};
+
+const initHtmlTable = () => {
   for (let i = 0; i < 5; i++) {
     $("table").append(
       `<tr>
-              <td id="${i * 7}"></td>
-              <td id="${i * 7 + 1}"></td>
-              <td id="${i * 7 + 2}"></td>
-              <td id="${i * 7 + 3}"></td>
-              <td id="${i * 7 + 4}"></td>
-              <td id="${i * 7 + 5}"></td>
-              <td id="${i * 7 + 6}"></td>
-          </tr>`
+          <td id="${i * 7}"></td>
+          <td id="${i * 7 + 1}"></td>
+          <td id="${i * 7 + 2}"></td>
+          <td id="${i * 7 + 3}"></td>
+          <td id="${i * 7 + 4}"></td>
+          <td id="${i * 7 + 5}"></td>
+          <td id="${i * 7 + 6}"></td>
+        </tr>`
     );
   }
+};
 
+const injectCards = () => {
+  // that way we know, which cards can be empty
   let days = getDaysInMonthUTC(
     DateSingleton.getInstance().getMonth(),
     DateSingleton.getInstance().getYear()
@@ -131,10 +155,38 @@ const initGrid = async () => {
       let id = button.target.getAttribute('eventId');
       let event =await getEvent(id);
       setEventDetails(event);
+
       updateModal.show();
 
       $("#update-event-button").on("click", () => {
         const updateEventData = {
+          id: id,
+          title: $("#update-title").val(),
+          date: $("#update-date").val(),
+          time: $("#update-time").val(),
+          duration: $("#update-duration").val(),
+          location: $("#update-location").val(),
+          description: $("#update-description").val(),
+          isPrivate: $("#update-isPrivate").is(":checked") ? true : false,
+        };
+
+        updateEvent(updateEventData);
+      });
+    });
+  }
+
+  for (let user in sharedEventsMap) {
+    let sharedEvents = sharedEventsMap[user];
+    for (let event of sharedEvents) {
+      $(`#event${event.id}`).on("click", async (button) => {
+        console.log(button.target.getAttribute("eventId"));
+        let id = button.target.getAttribute("eventId");
+        var event = await getEvent(id);
+        setEventDetails(event);
+        updateModal.show();
+
+        $("#update-event-button").on("click", () => {
+          const updateEventData = {
             id: id,
             title: $("#update-title").val(),
             date: $("#update-date").val(),
@@ -145,14 +197,11 @@ const initGrid = async () => {
             isPrivate: $("#update-isPrivate").is(":checked") ? true : false,
           };
 
-          updateEvent(updateEventData)
-      })
-    });
+          updateEvent(updateEventData);
+        });
+      });
+    }
   }
-
-  $(".closeModalBtn").on("click", () => {
-    updateModal.hide();
-  });
 };
 
 const getDaysInMonthUTC = (month, year) => {
@@ -167,37 +216,56 @@ const getDaysInMonthUTC = (month, year) => {
 
 const emptyCardElement = () => {
   return `<div class="card" style="width: 12rem; height: 18rem;">
-              <div class="card-body"></div>
-            </div>`;
+            <div class="card-body"></div>
+          </div>`;
 };
 
 const cardElement = (day) => {
-  let htmlString = `<div class="card" style="width: 12rem; height: 18rem;">
-    <div class="card-body">
-    <h5 class="card-title">${day.getUTCDate()}</h5>
-    <p class="card-text">`;
-    if (events != undefined) {
-      var eventsByDay=[];
-      events.forEach((element) => {
-        let date = new Date(element.dateTime);
-        if (date.getDate() == day.getUTCDate()) {
-          eventsByDay.push(element);
-        }
-      });
-      if(eventsByDay.length !=0){      
-        eventsByDay=eventsByDay.sort(function(b,a){
-        return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
-      });
-      eventsByDay.forEach((element)=>{
-        htmlString += `<button id="event${element.id}" eventId="${element.id}">${element.title}</button><br>`;
-      });
-    }
-    }
-  htmlString += `</p>
-    </div>
-  </div>`;
+  let dateStamp = `${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`;
 
-  return htmlString;
+  return `<div class="card" style="width: 12rem; height: 18rem;">
+            <div class="card-body">
+              <h5 class="card-title">${day.getUTCDate()}</h5>
+              <p class="card-text">
+              <div id="${dateStamp}"></div>
+              </p>
+            </div>
+          </div>`;
+  // if (events != undefined) {
+  //   var eventsByDay = [];
+  //   events.forEach((element) => {
+  //     let date = new Date(element.dateTime);
+  //     if (date.getDate() == day.getUTCDate()) {
+  //       eventsByDay.push(element);
+  //     }
+  //   });
+  //   if (eventsByDay.length != 0) {
+  //     eventsByDay = eventsByDay.sort(function (b, a) {
+  //       return new Date(b.dateTime).getTime() - new Date(a.dateTime).getTime();
+  //     });
+  //     eventsByDay.forEach((element)=>{
+  //       htmlString += `<button id="event${element.id}" eventId="${element.id}">${element.title}</button><br>`;
+  //     });
+  //   }
+  // }
+  //  htmlString += `</p>
+  //   </div>
+  // </div>`;
+
+  // <div id="${dateStamp}T00:00:00"></div>
+  // <div id="${dateStamp}T02:00:00"></div>
+  // <div id="${dateStamp}T04:00:00"></div>
+  // <div id="${dateStamp}T06:00:00"></div>
+  // <div id="${dateStamp}T08:00:00"></div>
+  // <div id="${dateStamp}T10:00:00"></div>
+  // <div id="${dateStamp}T12:00:00"></div>
+  // <div id="${dateStamp}T14:00:00"></div>
+  // <div id="${dateStamp}T16:00:00"></div>
+  // <div id="${dateStamp}T18:00:00"></div>
+  // <div id="${dateStamp}T20:00:00"></div>
+  // <div id="${dateStamp}T22:00:00"></div>
+
+  // return htmlString;
 };
 
 export { initGrid };

@@ -19,7 +19,6 @@ const initFilterBtn = async () => {
 };
 
 const filterCalendars = (emails) => {
-  //todo: pass current month
   fetch(
     serverAddress +
       `/event/share/sharedCalendars/${

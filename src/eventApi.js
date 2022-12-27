@@ -31,7 +31,7 @@ const createEvent = (data) => {
     .then((response) => {
       alert("Event " + response.title + " added successfully");
       console.log(response);
-      
+
       window.history.pushState({}, "", "/calendar");
       urlLocationHandler();
     })
@@ -72,7 +72,7 @@ const updateEvent = (data) => {
     headers: {
       eventId: data.id,
       token: localStorage.getItem("token"),
-      eventId:data.id,
+      eventId: data.id,
       "Content-Type": "application/json",
     },
   })

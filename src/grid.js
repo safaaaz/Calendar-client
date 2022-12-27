@@ -80,9 +80,9 @@ const injectCards = () => {
 };
 const placeMyEvents = (myEvents) => {
   // add my own events
+  console.log("Placing my events: ", myEvents);
   for (let event of myEvents) {
     let dateStamp = event.dateTime.split("T")[0];
-
     $(`#${dateStamp}`).append(
       `<button id="event${event.id}" class="btn btn-primary" eventId="${event.id}">${event.title}</button><br>`
     );
@@ -352,8 +352,7 @@ const emptyCardElement = () => {
 };
 
 const cardElement = (day) => {
-  let dateStamp = `${day.getFullYear()}-${day.getMonth() + 1}-${day.getDate()}`;
-
+  let dateStamp = day.toISOString().split("T")[0];
   return `<div class="card" style="width: 12rem; height: 18rem;">
             <div class="card-body">
               <h5 class="card-title">${day.getUTCDate()}</h5>

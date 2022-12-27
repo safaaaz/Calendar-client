@@ -53,10 +53,66 @@ const initGrid = async () => {
   for (let i in days) {
     $(`#${parseInt(i) + offset}`).append(cardElement(days[i]));
   }
-
+  const guestsElements =async (roles,statuses)=>{
+    console.log("arrive to guest elements");
+    //console.log(guests.data);
+    const list = document.createDocumentFragment();
+    let li;
+    for(let i in roles){
+      li = document.createElement(`li`);
+      let div = document.createElement(`div`);
+      let email = document.createElement(`span`);
+      email.innerHTML=`${roles[i].user.email} `;
+      div.appendChild(email);
+      if(roles[i].role=="GUEST"){
+        let button = document.createElement(`button`);
+        button.innerHTML=`make admin`;
+        button.addEventListener('click', function (e) {
+          console.log("clickeeeeeeeeeeed");
+          updateModal.show();
+        });
+        div.appendChild(button);
+      } else{
+        let admin = document.createElement('u');
+        admin.innerHTML=`admin`;
+        div.appendChild(admin);
+      }
+      li.appendChild(div);
+      console.log(roles[i].user.email,roles[i].role);
+      console.log(statuses[i].user.email,statuses[i].status);
+      list.appendChild(li);
+    }
+    return list;
+    }
+  
   // for each event we have to activate a listener for update modal
   let updateModal = $("#update-modal");
-  const setEventDetails=(event)=>{
+  const getEventGuests=async (eventId)=>{
+    let guests;
+    await fetch(
+      serverAddress +
+        `/event/getEventGuests/${eventId}`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          token: localStorage.getItem("token"),
+        },
+      }
+    )    
+    .then((response) => {
+      return response.json();
+    })
+      .then((response) => {
+        
+          console.log("okkkkkkkkkkkkkkkkkkkkkkkk");
+        
+        console.log(response);
+        guests = response;
+      });
+      return guests;
+  }
+  const setEventDetails=async (event)=>{
     $("#update-title").val(event.title);
     const eventDate = new Date(event.dateTime);
     var eventTime = eventDate.toTimeString().split(' ')[0];
@@ -67,12 +123,13 @@ const initGrid = async () => {
     $("#update-location").val(event.location),
     $("#update-description").val(event.description),
     $("#update-isPrivate").prop("checked", event.private);
+    $("#event-guest").append(await guestsElements(event.userRoles,event.userStatuses));
   }
   for (let event of events) {
     $(`#event${event.id}`).on("click",async (button) => {
       console.log(button.target.getAttribute('eventId'));
       let id = button.target.getAttribute('eventId');
-       var event =await getEvent(id);
+      let event =await getEvent(id);
       setEventDetails(event);
       updateModal.show();
 

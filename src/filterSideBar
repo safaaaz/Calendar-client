@@ -80,7 +80,7 @@ const initFilterSideBar = (calendarsMap) => {
         //set checkbox label
         let checkboxLabel = document.createElement("label");
         checkboxLabel.setAttribute("for", `${user.email}`);
-        checkboxLabel.innerHTML = `${user.name} (${user.email}) `;
+        checkboxLabel.innerHTML = `${user.email}`;
 
         //keep previous friends selection
         if (calendarsMap != undefined) {

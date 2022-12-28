@@ -7,7 +7,7 @@ import { initShareBtn } from "./share";
 
 let id;
 
-const initCalendar2 = async (calendarsMap) => {
+const initCalendar2 = (calendarsMap) => {
 
   initDateToggle();
   initShareBtn();

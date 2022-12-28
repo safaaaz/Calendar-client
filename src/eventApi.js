@@ -77,22 +77,22 @@ const updateEvent = (data) => {
     },
   })
     .then((response) => {
-      return response.json();
+      console.log(response.status);
+      return Promise.all([response.status, response.json()]);
     })
-    .then((response) => {
-      if (response != undefined) {
-        alert("Event " + response.eventTitle + " has been updated successfully");
-        //todo: close modal
-        console.log(response);
+    .then(([status, body]) => {
+      console.log(status, body);
+      if (status == 200) {
+        alert("Event " + body.eventTitle + " has been updated successfully");
         stompClient.send("/app/update/", [],JSON.stringify({
-          eventId: response.eventId,
-          eventTitle: response.eventTitle,
-          editorEmail: response.editorEmail,
+          eventId: body.eventId,
+          eventTitle: body.eventTitle,
+          editorEmail: body.editorEmail,
       }));
         window.history.pushState({}, "", "/calendar");
         urlLocationHandler();
       } else {
-        alert(response.message);
+        alert(body.message);
       }
     })
     .catch((error) => {

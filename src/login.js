@@ -2,6 +2,7 @@ import $ from "jquery";
 import { serverAddress } from "./constants";
 import { urlLocationHandler } from "./router";
 import { validateEmail, validatePassword } from "./validations";
+import {openConnection} from "./notifications";
 
 const loginUsingGithub=(code)=>{
   fetch(serverAddress + "/auth/registerUsingGitHub?code="+code, {
@@ -42,6 +43,7 @@ const initLogin = () => {
         .then(async (token) => {
           console.log(token);
           if (token != null) {
+            openConnection();
             localStorage.setItem("token", token);
             localStorage.setItem("email", user.email);
             window.history.pushState({}, "", "/calendar");

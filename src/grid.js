@@ -3,6 +3,7 @@ import { serverAddress } from "./constants";
 import { updateEvent, getEvent } from "./eventApi";
 import { DateSingleton } from "./dateSingleton";
 import { initUpdateEventModal } from "./modal";
+import {stompClient} from "./notifications";
 
 let myEvents;
 
@@ -124,6 +125,11 @@ const initInviteGuestBtn = (eventId) => {
       .then(([status, body]) => {
         console.log(status, body);
         if (status == 200) {
+          stompClient.send("/app/inviteGuest/", [],JSON.stringify({
+            name: body.name,
+            email: body.email,
+            eventId: body.eventId,
+        }));
           alert(`User ${body.email} invited successfully!`);
         } else {
           alert(body.message);

@@ -132,6 +132,31 @@ const initInviteGuestBtn = (eventId) => {
   });
 };
 
+const initDeleteEventBtn = (eventId) => {
+  $("#delete-event-button").on("click", () => {
+    fetch(serverAddress + "/event/delete", {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        token: localStorage.getItem("token"),
+        eventId: eventId,
+      },
+    })
+      .then((response) => {
+        console.log(response.status);
+        return Promise.all([response.status, response.json()]);
+      })
+      .then(([status, body]) => {
+        console.log(status, body);
+        if (status == 200) {
+          alert(`User ${body.email} invited successfully!`);
+        } else {
+          alert(body.message);
+        }
+      });
+  });
+};
+
 const makeAdmin = async (eventId, userEmail) => {
   var success = false;
   await fetch(serverAddress + "/event/makeAdmin/", {
@@ -286,6 +311,7 @@ const activateEvents = (myEvents, sharedEventsMap) => {
 
       setEventDetails(event);
       initInviteGuestBtn(id);
+      initDeleteEventBtn(event.id);
 
       updateModal.show();
 

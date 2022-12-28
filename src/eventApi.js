@@ -77,17 +77,17 @@ const updateEvent = (data) => {
     },
   })
     .then((response) => {
-      return response.json();
+      console.log(response.status);
+      return Promise.all([response.status, response.json()]);
     })
-    .then((response) => {
-      if (response != undefined) {
-        alert("Event " + response.title + " has been updated successfully");
-        //todo: close modal
-        console.log(response);
+    .then(([status, body]) => {
+      console.log(status, body);
+      if (status == 200) {
+        alert("Event " + body.title + " has been updated successfully");
         window.history.pushState({}, "", "/calendar");
         urlLocationHandler();
       } else {
-        alert(response.message);
+        alert(body.message);
       }
     })
     .catch((error) => {

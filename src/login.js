@@ -14,9 +14,11 @@ const loginUsingGithub=(code)=>{
   .then((response) => {
     return response.status == 200 ? response.json() : null;
   })
-    .then(async (token) => {
-      if (token != null) {
-          localStorage.setItem("token", token);
+    .then(async (user) => {
+      if (user != null) {
+        console.log(user);
+          localStorage.setItem("token", user.token);
+          localStorage.setItem("email", user.email);
           window.history.pushState({}, "", "/calendar");
           await urlLocationHandler();
       }});

@@ -1,7 +1,7 @@
 import { event } from "jquery";
 import { serverAddress } from "./constants";
 import { urlLocationHandler } from "./router";
-
+import {stompClient} from "./notifications";
 const createEvent = (data) => {
   console.log("Calling localhost:8080/event/add");
   fetch(serverAddress + "/event/add", {
@@ -83,7 +83,12 @@ const updateEvent = (data) => {
     .then(([status, body]) => {
       console.log(status, body);
       if (status == 200) {
-        alert("Event " + body.title + " has been updated successfully");
+        alert("Event " + body.eventTitle + " has been updated successfully");
+        stompClient.send("/app/update/", [],JSON.stringify({
+          eventId: body.eventId,
+          eventTitle: body.eventTitle,
+          editorEmail: body.editorEmail,
+      }));
         window.history.pushState({}, "", "/calendar");
         urlLocationHandler();
       } else {
@@ -94,5 +99,4 @@ const updateEvent = (data) => {
       console.error(`ERROR: ${error}`);
     });
 };
-
 export { createEvent, updateEvent, getEvent };

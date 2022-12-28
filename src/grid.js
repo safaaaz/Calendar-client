@@ -1,9 +1,9 @@
 import $ from "jquery";
-
 import { serverAddress } from "./constants";
 import { updateEvent, getEvent } from "./eventApi";
 import { DateSingleton } from "./dateSingleton";
 import { initUpdateEventModal } from "./modal";
+import {stompClient} from "./notifications";
 
 let myEvents;
 
@@ -19,6 +19,7 @@ const initGrid = async (sharedEventsMap) => {
   placeSharedEvents(sharedEventsMap);
 
   activateEvents(myEvents, sharedEventsMap);
+
 };
 
 const fetchMyEvents = async () => {
@@ -111,6 +112,36 @@ const initInviteGuestBtn = (eventId) => {
     fetch(serverAddress + "/event/inviteGuest/", {
       method: "POST",
       body: JSON.stringify({ email: email }),
+      headers: {
+        "Content-Type": "application/json",
+        token: localStorage.getItem("token"),
+        eventId: eventId,
+      },
+    })
+      .then((response) => {
+        console.log(response.status);
+        return Promise.all([response.status, response.json()]);
+      })
+      .then(([status, body]) => {
+        console.log(status, body);
+        if (status == 200) {
+          stompClient.send("/app/inviteGuest/", [],JSON.stringify({
+            name: body.name,
+            email: body.email,
+            eventId: body.eventId,
+        }));
+          alert(`User ${body.email} invited successfully!`);
+        } else {
+          alert(body.message);
+        }
+      });
+  });
+};
+
+const initDeleteEventBtn = (eventId) => {
+  $("#delete-event-button").on("click", () => {
+    fetch(serverAddress + "/event/delete", {
+      method: "DELETE",
       headers: {
         "Content-Type": "application/json",
         token: localStorage.getItem("token"),
@@ -286,6 +317,7 @@ const activateEvents = (myEvents, sharedEventsMap) => {
 
       setEventDetails(event);
       initInviteGuestBtn(id);
+      initDeleteEventBtn(event.id);
 
       updateModal.show();
 

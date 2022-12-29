@@ -72,7 +72,10 @@ const updateEvent = (data) => {
     headers: {
       eventId: data.id,
       token: localStorage.getItem("token"),
-      eventId: data.id,
+      title:data.title,
+      duration:data.duration,
+      date: data.date,
+      time:data.time,
       "Content-Type": "application/json",
     },
   })

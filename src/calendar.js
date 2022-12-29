@@ -8,20 +8,23 @@ import { DateSingleton } from "./dateSingleton";
 let events;
 
 const initCalendar = async () => {
-
   let id;
   let attachments = [];
 
   //Set today as default day on event form
   var today = new Date();
 
-  await fetch(serverAddress + `/event/myEventsByMonth/${DateSingleton.getInstance().getMonth()+1}`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      token: localStorage.getItem("token"),
-    },
-  }).then((response) => {
+  await fetch(
+    serverAddress +
+      `/event/myEventsByMonth/${DateSingleton.getInstance().getMonth() + 1}`,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        token: localStorage.getItem("token"),
+      },
+    }
+  ).then((response) => {
     if (response.ok) {
       response.text().then((text) => {
         events = JSON.parse(text);
@@ -31,7 +34,7 @@ const initCalendar = async () => {
     }
   });
 
-  ("#date").attr("value", today.toISOString().substring(0, 10));
+  "#date".attr("value", today.toISOString().substring(0, 10));
 
   // Get the modal
   let modal = $("#test-modal");
@@ -66,14 +69,12 @@ const initCalendar = async () => {
     });
   });
 
-  
   $("#createEventBtn").on("click", () => {
+    let newAttachments = [];
 
-    let newAttachments = []
-
-    for(let attachment of attachments){
-      let dict = {}
-      newAttachments.push(dict["attachment"] = attachment)
+    for (let attachment of attachments) {
+      let dict = {};
+      newAttachments.push((dict["attachment"] = attachment));
     }
 
     const calendarEvent = {

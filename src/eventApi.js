@@ -1,7 +1,7 @@
 import { event } from "jquery";
 import { serverAddress } from "./constants";
 import { urlLocationHandler } from "./router";
-
+import {stompClient} from "./notifications";
 const createEvent = (data) => {
   console.log("Calling localhost:8080/event/add");
   fetch(serverAddress + "/event/add", {
@@ -31,7 +31,7 @@ const createEvent = (data) => {
     .then((response) => {
       alert("Event " + response.title + " added successfully");
       console.log(response);
-      
+
       window.history.pushState({}, "", "/calendar");
       urlLocationHandler();
     })
@@ -72,27 +72,31 @@ const updateEvent = (data) => {
     headers: {
       eventId: data.id,
       token: localStorage.getItem("token"),
-      eventId:data.id,
+      eventId: data.id,
       "Content-Type": "application/json",
     },
   })
     .then((response) => {
-      return response.json();
+      console.log(response.status);
+      return Promise.all([response.status, response.json()]);
     })
-    .then((response) => {
-      if (response != undefined) {
-        alert("Event " + response.title + " has been updated successfully");
-        //todo: close modal
-        console.log(response);
+    .then(([status, body]) => {
+      console.log(status, body);
+      if (status == 200) {
+        alert("Event " + body.eventTitle + " has been updated successfully");
+        stompClient.send("/app/update/", [],JSON.stringify({
+          eventId: body.eventId,
+          eventTitle: body.eventTitle,
+          editorEmail: body.editorEmail,
+      }));
         window.history.pushState({}, "", "/calendar");
         urlLocationHandler();
       } else {
-        alert(response.message);
+        alert(body.message);
       }
     })
     .catch((error) => {
       console.error(`ERROR: ${error}`);
     });
 };
-
 export { createEvent, updateEvent, getEvent };
